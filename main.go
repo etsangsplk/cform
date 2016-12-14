@@ -13,7 +13,7 @@ import (
 
 var RootCmd = &cobra.Command{
 	Use:   "cfn-tmpl",
-	Short: "Cloudformation helper utility",
+	Short: "Helper utility for managing Cloudformation templates",
 }
 
 var flags struct {
@@ -22,7 +22,7 @@ var flags struct {
 	overwrite  bool
 }
 
-var createCmd = &cobra.Command{
+var mergeCmd = &cobra.Command{
 	Use:   "merge",
 	Short: "Merge templates in a source directory",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -51,11 +51,6 @@ var createCmd = &cobra.Command{
 	},
 }
 
-var updateCmd = &cobra.Command{
-	Use:   "update",
-	Short: "Update a Cloudformation stack",
-}
-
 func main() {
 	log.SetLevel(log.DebugLevel)
 
@@ -63,8 +58,7 @@ func main() {
 	RootCmd.PersistentFlags().StringVar(&flags.outputFile, "output-file", "", "File to which the merged template will be written")
 	RootCmd.PersistentFlags().BoolVar(&flags.overwrite, "overwrite", false, "Overwrite existing output file")
 
-	RootCmd.AddCommand(createCmd)
-	RootCmd.AddCommand(updateCmd)
+	RootCmd.AddCommand(mergeCmd)
 
 	if err := RootCmd.Execute(); err != nil {
 		log.WithError(err).Error("Failed to initialize cmd")

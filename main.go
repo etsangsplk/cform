@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
 	yaml "gopkg.in/yaml.v2"
 
@@ -72,7 +73,7 @@ type CfnMap map[string]map[string]interface{}
 
 // YamlReader represents the interface to read and return yaml file contents.
 type YamlReader interface {
-	Next() (CfnMap, error)
+	Next() ([]byte, error)
 	HasNext() bool
 }
 
@@ -98,19 +99,12 @@ func NewDirectoryReader(sourceDir string) (*DirectoryReader, error) {
 	return r, nil
 }
 
-func (r *DirectoryReader) Next() (CfnMap, error) {
-	var m = make(CfnMap)
-
+func (r *DirectoryReader) Next() ([]byte, error) {
 	source, err := ioutil.ReadFile(r.fileNames[r.idx])
 	if err != nil {
 		return nil, err
 	}
-
-	err = yaml.Unmarshal(source, &m)
-	if err != nil {
-		return nil, err
-	}
-	return m, nil
+	return source, nil
 }
 
 func (r *DirectoryReader) HasNext() bool {
@@ -124,7 +118,12 @@ func MergeYaml(reader YamlReader) ([]byte, error) {
 	mergedMap := make(CfnMap)
 
 	for reader.HasNext() {
-		m, err := reader.Next()
+		source, err := reader.Next()
+		if err != nil {
+			return nil, err
+		}
+
+		m, err := unmarshalCfnYaml(source)
 		if err != nil {
 			return nil, err
 		}
@@ -140,10 +139,33 @@ func MergeYaml(reader YamlReader) ([]byte, error) {
 		}
 	}
 
-	d, err := yaml.Marshal(mergedMap)
+	d, err := marshalCfnYaml(mergedMap)
 	if err != nil {
 		return nil, err
 	}
 
 	return d, nil
+}
+
+func unmarshalCfnYaml(source []byte) (CfnMap, error) {
+	// Escape quotes so that it can be unescaped later to make it appear later
+	// in the final generated yaml
+	str := strings.Replace(string(source), "\"", "\\\"", -1)
+
+	var m = make(CfnMap)
+	if err := yaml.Unmarshal([]byte(str), &m); err != nil {
+		return m, err
+	}
+	return m, nil
+}
+
+func marshalCfnYaml(m CfnMap) ([]byte, error) {
+	d, err := yaml.Marshal(m)
+	if err != nil {
+		return nil, err
+	}
+
+	// Unescape quotes which were escaped during unmarshalling
+	str := strings.Replace(string(d), "\\\"", "\"", -1)
+	return []byte(str), nil
 }

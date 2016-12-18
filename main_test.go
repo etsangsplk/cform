@@ -52,10 +52,10 @@ func testResult(t *testing.T, expected, actual string) {
 func TestSingleYamlMerge(t *testing.T) {
 	var d = format(`
 	a: 
-	  a1: 123
+		a1: 123
 	b:
-	  b1: 1
-	  b2: 2
+		b1: 1
+		b2: 2
 	`)
 	r, err := newInMemoryReader([]string{d})
 	if err != nil {
@@ -75,33 +75,33 @@ func TestSingleYamlMerge(t *testing.T) {
 func TestYamlMergeWithOverlap(t *testing.T) {
 	var d1 = format(`
 	a:
-	  a1: 1
+		a1: 1
 	b:
-	  b1: 1
+		b1: 1
 	c:
-	  c1: 1
+		c1: 1
 	`)
 
 	var d2 = format(`
 	a:
-	  a2: 2
+		a2: 2
 	b:
-	  b2: 2
+		b2: 2
 	d:
-	  d1: 1
+		d1: 1
 	`)
 
 	var d = format(`
 	a:
-	  a1: 1
-	  a2: 2
+		a1: 1
+		a2: 2
 	b:
-	  b1: 1
-	  b2: 2
+		b1: 1
+		b2: 2
 	c:
-	  c1: 1
+		c1: 1
 	d:
-	  d1: 1
+		d1: 1
 	`)
 
 	r, err := newInMemoryReader([]string{d1, d2})
@@ -122,31 +122,31 @@ func TestYamlMergeWithOverlap(t *testing.T) {
 func TestYamlMergeWithNoOverlap(t *testing.T) {
 	var d1 = format(`
 	a:
-	  a1: 1
-	  a2: 2
+		a1: 1
+		a2: 2
 	c:
-	  c1: 1
+		c1: 1
 	`)
 
 	var d2 = format(`
 	b:
-	  b1: 1
-	  b2: 2
+		b1: 1
+		b2: 2
 	d:
-	  d1: 1
+		d1: 1
 	`)
 
 	var d = format(`
 	a:
-	  a1: 1
-	  a2: 2
+		a1: 1
+		a2: 2
 	b:
-	  b1: 1
-	  b2: 2
+		b1: 1
+		b2: 2
 	c:
-	  c1: 1
+		c1: 1
 	d:
-	  d1: 1
+		d1: 1
 	`)
 
 	r, err := newInMemoryReader([]string{d1, d2})
@@ -167,37 +167,37 @@ func TestYamlMergeWithNoOverlap(t *testing.T) {
 func TestYamlMergeWithStrings(t *testing.T) {
 	var d1 = format(`
 	a:
-	  a1: 1
+		a1: 1
 	b:
-	  b1:
-	    Fn::Sub: "foo.${variable}"
+		b1:
+			Fn::Sub: "foo.${variable}"
 	c:
-	  c1: 1
+		c1: 1
 	`)
 
 	var d2 = format(`
 	a:
-	  a2: 2
+		a2: 2
 	b:
-	  b2: 2
-	  b3: "hello"
+		b2: 2
+		b3: "hello"
 	d:
-	  d1: "d1"
+		d1: "d1"
 	`)
 
 	var d = format(`
 	a:
-	  a1: 1
-	  a2: 2
+		a1: 1
+		a2: 2
 	b:
-	  b1:
-	    Fn::Sub: "foo.${variable}"
-	  b2: 2
-	  b3: "hello"
+		b1:
+			Fn::Sub: "foo.${variable}"
+		b2: 2
+		b3: "hello"
 	c:
-	  c1: 1
+		c1: 1
 	d:
-	  d1: "d1"
+		d1: "d1"
 	`)
 
 	r, err := newInMemoryReader([]string{d1, d2})
@@ -218,39 +218,40 @@ func TestYamlMergeWithStrings(t *testing.T) {
 func TestYamlMergeWithMultiLineStrings(t *testing.T) {
 	var d1 = format(`
 	b:
-	  b1:
-	    Fn::Sub: |
-		  This is a line with a ${variable}
-		  This is another line
+		b1:
+			Fn::Sub: |
+				This is a line with a ${variable}
+				This is another line
 	c:
-	  c1: 1`)
+		c1: 1
+	`)
 
 	var d2 = format(`
 	a:
-	  a1: "2"
-	  a2: |
-	    This is a line
-		This is the second line
-		This is another line
+		a1: "2"
+		a2: |
+			This is a line
+			This is the second line
+			This is another line
 	b:
-	  b2: "hello"
+		b2: "hello"
 	`)
 
 	var d = format(`
 	a:
-	  a1: "2"
-	  a2: |
-	    This is a line
-		This is the second line
-		This is another line
+		a1: "2"
+		a2: |
+			This is a line
+			This is the second line
+			This is another line
 	b:
-	  b1:
-	    Fn::Sub: |
-		  This is a line with a ${variable}
-		  This is another line
-	  b2: "hello"
+		b1:
+			Fn::Sub: |
+				This is a line with a ${variable}
+				This is another line
+		b2: "hello"
 	c:
-	  c1: 1
+		c1: 1
 	`)
 
 	r, err := newInMemoryReader([]string{d1, d2})

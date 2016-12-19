@@ -13,8 +13,8 @@ import (
 )
 
 var RootCmd = &cobra.Command{
-	Use:   "cfn-tmpl",
-	Short: "Helper utility for managing Cloudformation templates",
+	Use:   "cform",
+	Short: "CloudFormation utility which provides Terraform-like CLI functionalities",
 }
 
 var flags struct {

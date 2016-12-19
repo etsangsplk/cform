@@ -1,7 +1,7 @@
-# cfn-tmpl
+# cform
 
-Merge multiple CloudFormation templates into a single template. This helps to
-structure the templates into separate files.
+A CloudFormation utility inspired by [Terraform](https://terraform.io) and aims
+to provide Terraform-like CLI functionalities.
 
 ## Usage
 
@@ -12,18 +12,20 @@ Run the following to use the tool:
 
 ```
 $ go build
-$ cfn-tmpl merge --help
+$ ./cform merge --help
 ```
 
-## Cloudformation YAML syntax
+## Limitations
 
-The YAML parser used to parse the YAML templates requires that the templates
-contain valid YAML. Unfortunately when the shorthand form of the Cloudformation
-intrinsic functions are used, the parser does not parse the templates correctly.
+### Intrinsic function short names
 
-Hence for the `cfn-tmpl` tool to work, the templates mustn't contain the 
-short form function syntax i.e. use `Fn::Ref` instead of `!Ref`. E.g. for 
-specifying the userdata for an EC2 instance, use the following `Fn::*` syntax -
+The YAML parser used to parse the YAML templates fails to parse correctly when
+using shortnames for the CloudFormation intrinsic functions i.e. when using the
+`!` symbol with the function name. Multi-line strings aren't parsed correctly
+in such cases as the YAML parser treats the `!` character to be special. 
+
+Until this is resolved, use the `Fn::*` syntax. E.g. for specifying the 
+userdata for an EC2 instance, use the following -
 
 ```yaml
 UserData:
@@ -34,6 +36,8 @@ UserData:
       /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource LaunchConfig --configsets wordpress_install --region ${AWS::Region}
       /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WebServerGroup --region ${AWS::Region}
 ```
+
+Note that for `!Ref`, the alternate is `Ref` and not `Fn::Ref`.
 
 ## Assumptions
 

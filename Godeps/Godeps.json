@@ -1,10 +1,7 @@
 {
-	"ImportPath": "github.com/isubuz/cfn-tmpl",
+	"ImportPath": "github.com/isubuz/cform",
 	"GoVersion": "go1.7",
 	"GodepVersion": "v75",
-	"Packages": [
-		"./..."
-	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",

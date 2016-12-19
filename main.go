@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	yaml "gopkg.in/yaml.v2"
 
@@ -39,11 +41,15 @@ var mergeCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		yaml, err := MergeYaml(dirReader)
+		yaml := []byte(fmt.Sprintf("# THIS FILE HAS BEEN GENERATED AUTOMATICALLY BY cform AT %s.\n# DO NOT MODIFY THIS FILE MANUALLY.\n\n", time.Now()))
+
+		merged, err := MergeYaml(dirReader)
 		if err != nil {
 			log.WithError(err).Error("Could not merge yaml files")
 			os.Exit(-1)
 		}
+
+		yaml = append(yaml, merged...)
 
 		if err = ioutil.WriteFile(flags.outputFile, yaml, 0644); err != nil {
 			log.WithField("output-file", flags.outputFile).Error("Could not write to output file")

@@ -19,9 +19,9 @@ $ ./cform merge --help
 
 ### Intrinsic function short names
 
-The YAML parser used to parse the YAML templates fails to parse correctly when
-using shortnames for the CloudFormation intrinsic functions i.e. when using the
-`!` symbol with the function name. Multi-line strings aren't parsed correctly
+The YAML parser fails to parse the templates correctly when the template 
+contains CloudFormation intrinsic functions in their short form i.e. using the
+`!` character with the function name. Multi-line strings aren't parsed correctly
 in such cases as the YAML parser treats the `!` character to be special. 
 
 Until this is resolved, use the `Fn::*` syntax. E.g. for specifying the 

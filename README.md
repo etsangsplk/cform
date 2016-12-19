@@ -15,6 +15,10 @@ $ go build
 $ ./cform merge --help
 ```
 
+An example on how a large CloudFormation template can be organised in multiple 
+templates can be found in the [cfn-hugo](https://github.com/isubuz/cfn-hugo)
+project.
+
 ## Limitations
 
 ### Intrinsic function short names

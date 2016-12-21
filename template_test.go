@@ -1,4 +1,4 @@
-package main
+package cform
 
 import (
 	"strings"
@@ -63,7 +63,7 @@ func TestSingleYamlMerge(t *testing.T) {
 		return
 	}
 
-	b, err := MergeYaml(r)
+	b, err := MergeTemplates(r)
 	if err != nil {
 		t.Errorf("Failed to merge yaml", err)
 		return
@@ -110,7 +110,7 @@ func TestYamlMergeWithOverlap(t *testing.T) {
 		return
 	}
 
-	b, err := MergeYaml(r)
+	b, err := MergeTemplates(r)
 	if err != nil {
 		t.Errorf("Failed to merge yaml", err)
 		return
@@ -155,7 +155,7 @@ func TestYamlMergeWithNoOverlap(t *testing.T) {
 		return
 	}
 
-	b, err := MergeYaml(r)
+	b, err := MergeTemplates(r)
 	if err != nil {
 		t.Errorf("Failed to merge yaml", err)
 		return
@@ -206,7 +206,7 @@ func TestYamlMergeWithStrings(t *testing.T) {
 		return
 	}
 
-	b, err := MergeYaml(r)
+	b, err := MergeTemplates(r)
 	if err != nil {
 		t.Errorf("Failed to merge yaml", err)
 		return
@@ -260,7 +260,7 @@ func TestYamlMergeWithMultiLineStrings(t *testing.T) {
 		return
 	}
 
-	b, err := MergeYaml(r)
+	b, err := MergeTemplates(r)
 	if err != nil {
 		t.Errorf("Failed to merge yaml", err)
 		return

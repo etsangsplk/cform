@@ -11,7 +11,7 @@ CloudFormation YAML files in one.
 Run the following to use the tool:
 
 ```
-$ go build
+$ go build ./cmd/cform
 $ ./cform merge --help
 ```
 

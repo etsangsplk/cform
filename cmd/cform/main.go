@@ -9,9 +9,9 @@ import (
 )
 
 var rootCmdFlags struct {
-	templateSrc string
-	templateOut string
-	overwrite   bool
+	tmplSrc       string
+	tmplOut       string
+	tmplOverwrite bool
 }
 
 var rootCmd = &cobra.Command{
@@ -20,10 +20,9 @@ var rootCmd = &cobra.Command{
 }
 
 func main() {
-
-	rootCmd.PersistentFlags().StringVar(&rootCmdFlags.templateSrc, "template-src", "templates", "Directory containing CloudFormation templates")
-	rootCmd.PersistentFlags().StringVar(&rootCmdFlags.templateOut, "template-out", "", "Location to which the merged template will be written")
-	rootCmd.PersistentFlags().BoolVar(&rootCmdFlags.overwrite, "overwrite", false, "Overwrite existing template output file")
+	rootCmd.PersistentFlags().StringVar(&rootCmdFlags.tmplSrc, "template-src", "templates", "Directory containing CloudFormation templates")
+	rootCmd.PersistentFlags().StringVar(&rootCmdFlags.tmplOut, "template-out", "", "Location to which the merged template will be written")
+	rootCmd.PersistentFlags().BoolVar(&rootCmdFlags.tmplOverwrite, "template-overwrite", false, "Overwrite existing template output file")
 
 	if err := rootCmd.Execute(); err != nil {
 		log.WithError(err).Error("Failed to initialize cform ctl")

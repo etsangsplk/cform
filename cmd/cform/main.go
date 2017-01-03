@@ -20,6 +20,8 @@ var rootCmd = &cobra.Command{
 }
 
 func main() {
+	log.SetLevel(log.DebugLevel)
+
 	rootCmd.PersistentFlags().StringVar(&rootCmdFlags.tmplSrc, "template-src", "templates", "Directory containing CloudFormation templates")
 	rootCmd.PersistentFlags().StringVar(&rootCmdFlags.tmplOut, "template-out", "", "Location to which the merged template will be written")
 	rootCmd.PersistentFlags().BoolVar(&rootCmdFlags.tmplOverwrite, "template-overwrite", false, "Overwrite existing template output file")

@@ -3,21 +3,43 @@
 A CloudFormation utility inspired by [Terraform](https://terraform.io) and aims
 to provide Terraform-like CLI functionalities.
 
-## Usage
+## Status
 
-Currently this tool supports only a `merge` operation to merge multiple 
-CloudFormation YAML files in one. 
+Still developed actively for the release of the `0.1` version.
 
-Run the following to use the tool:
+## Building cform
 
-```
+```sh
 $ go build ./cmd/cform
-$ ./cform merge --help
+$ ./cform --help
+```
+
+## Supported commands
+
+### cform merge
+
+This command can be used to merge multiple CloudFormation templates into a 
+single template. This is can useful when organising a large CloudFormation 
+stack template into multiple files. Run the following for help -
+
+```sh
+$ cform merge --help
 ```
 
 An example on how a large CloudFormation template can be organised in multiple 
 templates can be found in the [cfn-hugo](https://github.com/isubuz/cfn-hugo)
 project.
+
+### cform plan
+
+This command can be used to display an execution plan for any changes to a 
+CloudFormation template i.e. it displays the changes to any new or existing
+AWS resources based on the change to the template similar to the functionality
+provided by the `terraform plan` command. Run the followin for help -
+
+```sh
+$ cform plan --help
+```
 
 ## Limitations
 

@@ -38,6 +38,14 @@ var planCmdFlags struct {
 var planCmd = &cobra.Command{
 	Use:   "plan",
 	Short: "Show execution plan",
+	PreRun: func(cmd *cobra.Command, args []string) {
+		// Set random change set name if not passed
+		if planCmdFlags.changeSetName == "" {
+			t := time.Now()
+			planCmdFlags.changeSetName = fmt.Sprintf("cs-%s", t.Format("20060102150405"))
+			log.WithField("change-set-name", planCmdFlags.changeSetName).Debug("generating new change set name")
+		}
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		// TODO Check if stack exists
 		if err := mergeFromDir(rootCmdFlags.tmplSrc, rootCmdFlags.tmplOut, rootCmdFlags.tmplOverwrite); err != nil {

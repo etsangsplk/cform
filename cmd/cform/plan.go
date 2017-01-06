@@ -75,8 +75,9 @@ var planCmd = &cobra.Command{
 // plan creates a new change set using the input template and returns the
 // execution plan based on information retrieved from the change set.
 func plan(svc cloudformationiface.CloudFormationAPI, tmpl, stackConfigFile, stackName, changeSetName string, keepChangeSet bool) error {
+	changeSetCreated := false
 	defer func() {
-		if !keepChangeSet {
+		if changeSetCreated && !keepChangeSet {
 			// Delete the change set
 			delInput := &cloudformation.DeleteChangeSetInput{
 				ChangeSetName: aws.String(changeSetName),
@@ -102,6 +103,7 @@ func plan(svc cloudformationiface.CloudFormationAPI, tmpl, stackConfigFile, stac
 		log.WithError(err).Error("cannot create change set to determine plan")
 		return err
 	}
+	changeSetCreated = true
 	log.WithField("change-set-arn", *createResp.Id).Debug("created change set to determine plan")
 
 	descInput := &cloudformation.DescribeChangeSetInput{

@@ -8,6 +8,7 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/fatih/color"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -115,6 +116,8 @@ func plan(svc cloudformationiface.CloudFormationAPI, tmpl, stackConfigFile, stac
 		log.WithError(err).Error("cannot retrieve change set status")
 		return err
 	}
+
+	// TODO handle error returned
 	printChangeSetChanges(descResp)
 
 	return nil
@@ -122,12 +125,29 @@ func plan(svc cloudformationiface.CloudFormationAPI, tmpl, stackConfigFile, stac
 
 // printChangeSetChanges prints the changes to any new or existing resources
 // to standard out.
-// TODO need to decide on a better format for the execution plan
-func printChangeSetChanges(status *cloudformation.DescribeChangeSetOutput) {
+func printChangeSetChanges(status *cloudformation.DescribeChangeSetOutput) error {
 	for _, change := range status.Changes {
 		rs := change.ResourceChange
-		fmt.Printf("%s (%s - %s): %s\n", *rs.LogicalResourceId, *rs.ResourceType, *rs.PhysicalResourceId, *rs.Action)
+		action := *rs.Action
+
+		var c color.Attribute
+		if action == "Add" {
+			c = color.FgGreen
+		} else if action == "Modify" {
+			c = color.FgYellow
+		} else if action == "Remove" {
+			c = color.FgRed
+		} else {
+			return fmt.Errorf("Unknown action: %s", action)
+		}
+		cPrint := color.New(c)
+		cPrint.Printf("%s (%s)\n", *rs.LogicalResourceId, *rs.ResourceType)
+
+		fmt.Printf("\t%-15s: %s\n", "action", *rs.Action)
+		fmt.Printf("\t%-15s: %s\n", "physical-id", *rs.PhysicalResourceId)
+		fmt.Printf("\t%-15s: %s\n\n", "replacement", *rs.Replacement)
 	}
+	return nil
 }
 
 // describeAvailableChangeSet waits for the change set to be created and then

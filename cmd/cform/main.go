@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"os"
 
 	log "github.com/Sirupsen/logrus"
@@ -21,6 +22,24 @@ var rootCmd = &cobra.Command{
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		if rootCmdFlags.debug {
 			log.SetLevel(log.DebugLevel)
+		}
+
+		if rootCmdFlags.tmplOut == "" {
+			f, err := ioutil.TempFile("", "cform")
+			if err != nil {
+				log.Error("Cannot create output file for generated template")
+				os.Exit(-1)
+			}
+			rootCmdFlags.tmplOut = f.Name()
+			log.WithField("template-out", f.Name()).Debug("created new output file for template")
+		} else {
+			// If output file exists, check if it can be overwritten.
+			if _, err := os.Stat(rootCmdFlags.tmplOut); err == nil {
+				if !rootCmdFlags.tmplOverwrite {
+					log.WithField("template-out", rootCmdFlags.tmplOut).Error("File already exists")
+					os.Exit(-1)
+				}
+			}
 		}
 	},
 }

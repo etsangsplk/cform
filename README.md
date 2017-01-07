@@ -35,10 +35,30 @@ project.
 This command can be used to display an execution plan for any changes to a 
 CloudFormation template i.e. it displays the changes to any new or existing
 AWS resources based on the change to the template similar to the functionality
-provided by the `terraform plan` command. Run the followin for help -
+provided by the `terraform plan` command. E.g -
 
 ```sh
-$ cform plan --help
+$ cform plan --debug \
+    --template-src examples \
+    --stack-name test-stack \
+    --keep-change-set \
+
+DEBU[0000] created new output file for template          template-out=/var/folders/j5/4433kz115732274b3p7l6n380000gn/T/cform543365852
+DEBU[0000] generating new change set name                change-set-name=cs-20170107233101
+DEBU[0000] created change set to determine plan          change-set-arn=arn:aws:cloudformation:us-east-1:663481583451:changeSet/cs-20170107233101/29170942-bf52-4c13-93e5-44239e1cc060
+DEBU[0001] waiting for change set to be created...       change-set-status=CREATE_IN_PROGRESS
+DEBU[0001] waiting for change set to be created...       change-set-status=CREATE_IN_PROGRESS
+DEBU[0002] waiting for change set to be created...       change-set-status=CREATE_IN_PROGRESS
+Bucket1 (AWS::S3::Bucket)
+        action         : Modify
+        physical-id    : b1.isubuz.com
+        replacement    : True
+
+Bucket2 (AWS::S3::Bucket)
+        action         : Modify
+        physical-id    : b2.isubuz.com
+        replacement    : True
+
 ```
 
 ## Limitations

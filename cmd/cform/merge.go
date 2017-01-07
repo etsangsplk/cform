@@ -15,19 +15,13 @@ var mergeCmd = &cobra.Command{
 	Use:   "merge",
 	Short: "Merge CloudFormation templates",
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := mergeFromDir(rootCmdFlags.tmplSrc, rootCmdFlags.tmplOut, rootCmdFlags.tmplOverwrite); err != nil {
+		if err := mergeFromDir(rootCmdFlags.tmplSrc, rootCmdFlags.tmplOut); err != nil {
 			os.Exit(-1)
 		}
 	},
 }
 
-func mergeFromDir(tmplSrc, tmplOut string, tmplOverwrite bool) error {
-	// Check if output file exists, can it be overwritten
-	if _, err := os.Stat(tmplOut); err == nil && !tmplOverwrite {
-		log.WithField("template-out", tmplOut).Error("File already exists")
-		return err
-	}
-
+func mergeFromDir(tmplSrc, tmplOut string) error {
 	dirReader, err := cform.NewDirectoryReader(tmplSrc)
 	if err != nil {
 		log.WithError(err).Error("Could not create directory reader")

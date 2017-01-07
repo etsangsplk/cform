@@ -49,7 +49,7 @@ var planCmd = &cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		// TODO Check if stack exists
-		if err := mergeFromDir(rootCmdFlags.tmplSrc, rootCmdFlags.tmplOut, rootCmdFlags.tmplOverwrite); err != nil {
+		if err := mergeFromDir(rootCmdFlags.tmplSrc, rootCmdFlags.tmplOut); err != nil {
 			os.Exit(-1)
 		}
 

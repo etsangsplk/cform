@@ -9,6 +9,7 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/fatih/color"
+	"github.com/isubuz/cform"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -144,8 +145,8 @@ func printChangeSetChanges(status *cloudformation.DescribeChangeSetOutput) error
 		cPrint.Printf("%s (%s)\n", *rs.LogicalResourceId, *rs.ResourceType)
 
 		fmt.Printf("\t%-15s: %s\n", "action", *rs.Action)
-		fmt.Printf("\t%-15s: %s\n", "physical-id", *rs.PhysicalResourceId)
-		fmt.Printf("\t%-15s: %s\n\n", "replacement", *rs.Replacement)
+		fmt.Printf("\t%-15s: %s\n", "physical-id", cform.DerefString(rs.PhysicalResourceId, "<NA>"))
+		fmt.Printf("\t%-15s: %s\n\n", "replacement", cform.DerefString(rs.Replacement, "<NA>"))
 	}
 	return nil
 }
@@ -153,8 +154,8 @@ func printChangeSetChanges(status *cloudformation.DescribeChangeSetOutput) error
 // describeAvailableChangeSet waits for the change set to be created and then
 // returns the status of the change set.
 func describeAvailableChangeSet(svc cloudformationiface.CloudFormationAPI, input *cloudformation.DescribeChangeSetInput) (*cloudformation.DescribeChangeSetOutput, error) {
-	timeout := time.After(10 * time.Second)
-	tick := time.Tick(500 * time.Millisecond)
+	timeout := time.After(60 * time.Second)
+	tick := time.Tick(2000 * time.Millisecond)
 
 	for {
 		select {
@@ -179,7 +180,7 @@ func describeAvailableChangeSet(svc cloudformationiface.CloudFormationAPI, input
 				return resp, nil
 			}
 
-			log.WithField("change-set-status", status).Debug("waiting for change set to be created...")
+			log.WithField("change-set-status", status).Debug("waiting for change set to be available...")
 		}
 	}
 }

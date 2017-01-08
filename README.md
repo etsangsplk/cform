@@ -5,13 +5,21 @@ to provide Terraform-like CLI functionalities.
 
 ## Status
 
-Still developed actively for the release of the `0.1` version.
+Still actively developed for the `0.1` release.
 
 ## Building cform
 
 ```sh
 $ go build ./cmd/cform
 $ ./cform --help
+```
+## AWS configuration
+
+Setup the `~/.aws/credentials` and `~/.aws/config` files and sets the
+environment variables:
+
+```sh
+$ export AWS_PROFILE=<profile> && export AWS_REGION=us-east-1
 ```
 
 ## Supported commands
@@ -38,7 +46,7 @@ AWS resources based on the change to the template similar to the functionality
 provided by the `terraform plan` command. E.g -
 
 ```sh
-$ cform plan --debug \
+$ ./cform plan --debug \
     --template-src examples \
     --stack-name test-stack \
     --keep-change-set \
@@ -60,6 +68,36 @@ Bucket2 (AWS::S3::Bucket)
         replacement    : True
 
 ```
+
+### cform apply
+
+This command is similar to the `terraform apply` command and creates or updates
+a CloudFormation stack. The stack events are displayed in the CLI as and when
+the events occur. E.g. -
+
+```sh
+$ ./cform apply --debug \
+    --template-src ~/examples \
+    --stack-name test-stack
+
+DEBU[0000] created new output file for template          template-out=/var/folders/j5/4433kz115732274b3p7l6n380000gn/T/cform261840516
+DEBU[0000] stack exists; running update mode             stack-name=test-stack
+2017-01-25 11:06:45 +0000 UTC   UPDATE_IN_PROGRESS      AWS::CloudFormation::Stack      test-stack                  User Initiated
+2017-01-25 11:06:48 +0000 UTC   CREATE_IN_PROGRESS      AWS::S3::Bucket                 Bucketb5
+2017-01-25 11:06:49 +0000 UTC   CREATE_IN_PROGRESS      AWS::S3::Bucket                 Bucketb44
+2017-01-25 11:06:50 +0000 UTC   CREATE_IN_PROGRESS      AWS::S3::Bucket                 Bucketb5                Resource creation Initiated
+2017-01-25 11:06:50 +0000 UTC   CREATE_IN_PROGRESS      AWS::S3::Bucket                 Bucketb44               Resource creation Initiated
+2017-01-25 11:07:10 +0000 UTC   CREATE_COMPLETE         AWS::S3::Bucket                 Bucketb5
+2017-01-25 11:07:10 +0000 UTC   CREATE_COMPLETE         AWS::S3::Bucket                 Bucketb44
+2017-01-25 11:07:13 +0000 UTC   UPDATE_COMPLETE_CLEANUP_IN_PROGRESS     AWS::CloudFormation::Stack      test-stack
+2017-01-25 11:07:15 +0000 UTC   DELETE_IN_PROGRESS      AWS::S3::Bucket                 Bucketb4
+2017-01-25 11:07:37 +0000 UTC   DELETE_COMPLETE         AWS::S3::Bucket                 Bucketb4
+2017-01-25 11:07:37 +0000 UTC   UPDATE_COMPLETE         AWS::CloudFormation::Stack      test-stack
+```
+
+Note that unlike the AWS CloudFormation console, it shows only the events for the 
+current operation (update or create) and prints them in chronological order
+(which is reversed the CloudFormation console)
 
 ## Limitations
 

@@ -1,8 +1,10 @@
 package cform
 
 import (
+	"fmt"
 	"io/ioutil"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	yaml "gopkg.in/yaml.v2"
@@ -63,6 +65,10 @@ func MergeTemplates(reader TemplateReader) ([]byte, error) {
 			return nil, err
 		}
 
+		if err := validateYaml(source); err != nil {
+			return nil, err
+		}
+
 		m, err := unmarshalCfnYaml(source)
 		if err != nil {
 			return nil, err
@@ -85,6 +91,19 @@ func MergeTemplates(reader TemplateReader) ([]byte, error) {
 	}
 
 	return d, nil
+}
+
+func validateYaml(yaml []byte) error {
+	// Check if the yaml contains any shortcode intrinsic functions
+	r, err := regexp.Compile(`(!(?:Base64|FindInMap|GetAtt|GetAZs|ImportValue|Join|Select|Split|Sub|Ref))`)
+	if err != nil {
+		return err
+	}
+	matches := r.FindAllString(string(yaml), -1)
+	if len(matches) > 0 {
+		return fmt.Errorf("Found shortcode intrinsic functions: %s; Use the Fn form instead", strings.Join(matches, ","))
+	}
+	return nil
 }
 
 func unmarshalCfnYaml(source []byte) (TemplateMap, error) {

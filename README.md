@@ -13,6 +13,10 @@ Still actively developed for the `0.1` release.
 $ go build ./cmd/cform
 $ ./cform --help
 ```
+## Demo
+
+[![asciicast](https://asciinema.org/a/100642.png)](https://asciinema.org/a/100642)
+
 ## AWS configuration
 
 Setup the `~/.aws/credentials` and `~/.aws/config` files and sets the

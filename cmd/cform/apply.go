@@ -3,6 +3,7 @@ package main
 import (
 	"io/ioutil"
 	"os"
+	"time"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/isubuz/cform"
@@ -79,15 +80,7 @@ func apply(svc cloudformationiface.CloudFormationAPI, tmpl, stackConfigFile, sta
 		stackExists = true
 	}
 
-	// Get the timestamp of the last stack event
-	p0 := &cloudformation.DescribeStackEventsInput{
-		StackName: aws.String(stackName),
-	}
-	resp, err := svc.DescribeStackEvents(p0)
-	if err != nil {
-		return err
-	}
-	ts := *resp.StackEvents[0].Timestamp
+	var ts time.Time
 
 	if !stackExists {
 		p := &cloudformation.CreateStackInput{
@@ -99,12 +92,23 @@ func apply(svc cloudformationiface.CloudFormationAPI, tmpl, stackConfigFile, sta
 			log.WithError(err).Error("cannot create stack")
 			return err
 		}
+		ts = time.Now().UTC()
 	} else {
+		// Get the timestamp of the last stack event
+		p0 := &cloudformation.DescribeStackEventsInput{
+			StackName: aws.String(stackName),
+		}
+		resp, err := svc.DescribeStackEvents(p0)
+		if err != nil {
+			return err
+		}
+		ts = *resp.StackEvents[0].Timestamp
+
 		p := &cloudformation.UpdateStackInput{
 			StackName:    aws.String(stackName),
 			TemplateBody: aws.String(tmpl),
 		}
-		_, err := svc.UpdateStack(p)
+		_, err = svc.UpdateStack(p)
 		if err != nil {
 			log.WithError(err).Error("cannot update stack")
 			return err

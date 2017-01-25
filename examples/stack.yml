@@ -1,0 +1,21 @@
+# THIS FILE HAS BEEN GENERATED AUTOMATICALLY BY cform AT 2017-01-25 12:17:23.433073366 +0000 GMT.
+# DO NOT MODIFY THIS FILE MANUALLY.
+
+Resources:
+  TestBucket1:
+    Properties:
+      BucketName: "testbucket1.isubuz.com"
+    Type: "AWS::S3::Bucket"
+  TestBucket2:
+    Properties:
+      BucketName: "testbucket2.isubuz.com"
+    Type: "AWS::S3::Bucket"
+  TestBucket4:
+    Properties:
+      BucketName: "testbucket4.isubuz.com"
+    Type: "AWS::S3::Bucket"
+  TestResource1:
+    Properties:
+      ImageId: "ami-9be6f38c"
+      InstanceType: "t2.micro"
+    Type: "AWS::EC2::Instance"

@@ -1,0 +1,19 @@
+
+Resources:
+  TestBucket1:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: "testbucket1.isubuz.com"
+
+  TestBucket2:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: "testbucket2.isubuz.com"
+
+  TestBucket4:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: "testbucket4.isubuz.com"
+
+
+

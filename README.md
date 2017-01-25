@@ -15,7 +15,7 @@ $ ./cform --help
 ```
 ## Demo
 
-[![asciicast](https://asciinema.org/a/100642.png)](https://asciinema.org/a/100642?speed=2.5)
+[![asciicast](https://asciinema.org/a/100642.png)](https://asciinema.org/a/100642?speed=2)
 
 ## AWS configuration
 
